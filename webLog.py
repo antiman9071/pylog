@@ -110,5 +110,20 @@ def filterChallenges():
         c.execute(f'SELECT * FROM challenges WHERE challenge="{challengeEntry}" ORDER BY id')
         challenges = c.fetchall()
     return render_template('index.html', filteredChallenges=challenges)
+@app.route('/searchChallenges', methods=['POST', 'GET'])
+def searchChallenges():
+    with sqlite3.connect("log.db") as conn:
+        searchTerm = '*'
+        if request.method == 'POST':
+            option = request.form['searchTermChoice']
+            searchTerm = request.form['searchTerm']
+        c = conn.cursor()
+        if option == "ID":
+            c.execute(f'SELECT * FROM challenges WHERE id="{searchTerm}"')
+        elif option == "Username":
+            c.execute(f'SELECT * FROM challenges WHERE username="{searchTerm}"')
+        challenges = c.fetchall()
+    return render_template('index.html', filteredChallenges=challenges)
+
 init_db()
 app.run(host="0.0.0.0", port=80)
