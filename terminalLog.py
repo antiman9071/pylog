@@ -1,10 +1,10 @@
 import sqlite3
+import sys
 
-#TODO
-# add a search for id/username
 
+file = sys.argv[1]
 def init_db():
-    with sqlite3.connect("log.db") as conn:
+    with sqlite3.connect(file) as conn:
         c = conn.cursor()
         c.execute("CREATE TABLE IF NOT EXISTS challenges (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, method TEXT, challenge TEXT)")
         conn.commit()
@@ -19,7 +19,7 @@ def pad(output, charCount, LoR):
     return output
 
 def showDB(filter):
-    with sqlite3.connect("log.db") as conn:
+    with sqlite3.connect(file) as conn:
         c = conn.cursor()
         if(filter == "*"):
             c.execute("SELECT * FROM challenges")
@@ -34,7 +34,7 @@ def showDB(filter):
         conn.commit()
 
 def search(idOrUser, searchTerm, isPrinting):
-    with sqlite3.connect("log.db") as conn:
+    with sqlite3.connect(file) as conn:
         c = conn.cursor()
         if idOrUser:
             c.execute(f'SELECT * FROM challenges WHERE id="{searchTerm}"')
@@ -53,13 +53,13 @@ def search(idOrUser, searchTerm, isPrinting):
 
 
 def addEntry(username, password, method, challenge):
-    with sqlite3.connect("log.db") as conn:
+    with sqlite3.connect(file) as conn:
         c = conn.cursor()
         c.execute(f'INSERT INTO challenges (username, password, method, challenge) VALUES("{username}", "{password}", "{method}", "{challenge}")')
         conn.commit()
 
 def removeEntry(isAll):
-    with sqlite3.connect("log.db") as conn:
+    with sqlite3.connect(file) as conn:
         c = conn.cursor()
         if(isAll):
             c.execute("DELETE FROM sqlite_sequence")
@@ -74,7 +74,7 @@ def removeEntry(isAll):
         conn.commit()
 
 def modifyEntry(id, selection, modifiedValue):
-    with sqlite3.connect("log.db") as conn:
+    with sqlite3.connect(file) as conn:
         c = conn.cursor()
         if(selection == "username"):
             c.execute(f'UPDATE challenges SET username="{modifiedValue}" WHERE id={id}')

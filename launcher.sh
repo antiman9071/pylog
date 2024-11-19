@@ -1,5 +1,7 @@
 #! /bin/bash
 
+SCRIPT_LOG_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )""/log.db"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 if [[ "$1" == "help" ]];
     then
@@ -17,15 +19,15 @@ if [[ "$1" == "help" ]];
         while getopts ":w :g" opt; do
             case $opt in
             w) 
-                sudo python3 webLog.py
+                sudo python3 $SCRIPT_DIR/webLog.py $SCRIPT_LOG_DIR
                 exit 0;
                 ;;
             g) 
-                python3 guiLog.py
+                python3 $SCRIPT_DIR/guiLog.py $SCRIPT_LOG_DIR
                 exit 0;
                 ;;
             esac
         done
     fi
-python3 terminalLog.py 
+python3 $SCRIPT_DIR/terminalLog.py $SCRIPT_LOG_DIR
 

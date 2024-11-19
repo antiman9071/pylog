@@ -1,17 +1,19 @@
 from flask import Flask, render_template, url_for, request, redirect
 import sqlite3
+import sys
 
 app = Flask(__name__)
 
+file = sys.argv[1]
 def init_db():
-    with sqlite3.connect("log.db") as conn:
+    with sqlite3.connect(file) as conn:
         c = conn.cursor()
         c. execute("CREATE TABLE IF NOT EXISTS challenges (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, method TEXT, challenge TEXT)")
         conn.commit()
 
 @app.route('/', methods=['GET'])
 def index():
-    with sqlite3.connect("log.db") as conn:
+    with sqlite3.connect(file) as conn:
         c = conn.cursor()
         c.execute("SELECT * FROM challenges ORDER BY id")
         challenges = c.fetchall()
@@ -25,7 +27,7 @@ def add_challenge():
         methodEntry = request.form['method']
         challengeEntry = request.form['challenge']
 
-        with sqlite3.connect("log.db") as conn:
+        with sqlite3.connect(file) as conn:
             c = conn.cursor()
             c.execute(f'INSERT INTO challenges (username, password, method, challenge) VALUES("{usernameEntry}", "{passwordEntry}", "{methodEntry}", "{challengeEntry}")')
             conn.commit()
@@ -33,7 +35,7 @@ def add_challenge():
     return render_template('index.html')
 @app.route('/remove', methods=['POST'])
 def removeChallenge():
-    with sqlite3.connect("log.db") as conn:
+    with sqlite3.connect(file) as conn:
         if request.method == 'POST':
             c = conn.cursor()
             c.execute("SELECT * FROM challenges ORDER BY id")
@@ -47,7 +49,7 @@ def removeChallenge():
     return render_template('index.html')
 @app.route('/removeAll', methods=['POST'])
 def removeAllChallenges():
-    with sqlite3.connect("log.db") as conn:
+    with sqlite3.connect(file) as conn:
         if request.method == 'POST':
             c = conn.cursor()
             c.execute("DELETE FROM sqlite_sequence")
@@ -58,7 +60,7 @@ def removeAllChallenges():
 
 @app.route('/changeUser', methods=['POST'])
 def changeUserName():
-    with sqlite3.connect("log.db") as conn:
+    with sqlite3.connect(file) as conn:
         if request.method == 'POST':
             usernameEntry = request.form['usernameChange']
             idEntry = request.form['id']
@@ -69,7 +71,7 @@ def changeUserName():
     return render_template('index.html')
 @app.route('/changePassword', methods=['POST'])
 def changePasswd():
-    with sqlite3.connect("log.db") as conn:
+    with sqlite3.connect(file) as conn:
         if request.method == 'POST':
             passwordEntry = request.form['passwordChange']
             idEntry = request.form['id']
@@ -80,7 +82,7 @@ def changePasswd():
     return render_template('index.html')
 @app.route('/changeMethod', methods=['POST'])
 def changeMethod():
-    with sqlite3.connect("log.db") as conn:
+    with sqlite3.connect(file) as conn:
         if request.method == 'POST':
             methodEntry = request.form['methodChange']
             idEntry = request.form['id']
@@ -91,7 +93,7 @@ def changeMethod():
     return render_template('index.html')
 @app.route('/changeChallenge', methods=['POST'])
 def changeChallenge():
-    with sqlite3.connect("log.db") as conn:
+    with sqlite3.connect(file) as conn:
         if request.method == 'POST':
             challengeEntry = request.form['challengeChange']
             idEntry = request.form['id']
@@ -102,7 +104,7 @@ def changeChallenge():
     return render_template('index.html')
 @app.route('/filterChallenge', methods=['POST','GET'])
 def filterChallenges():
-    with sqlite3.connect("log.db") as conn:
+    with sqlite3.connect(file) as conn:
         challengeEntry = '*'
         if request.method == 'POST':
             challengeEntry = request.form['challengeFilter']
@@ -112,7 +114,7 @@ def filterChallenges():
     return render_template('index.html', filteredChallenges=challenges)
 @app.route('/searchChallenges', methods=['POST', 'GET'])
 def searchChallenges():
-    with sqlite3.connect("log.db") as conn:
+    with sqlite3.connect(file) as conn:
         searchTerm = '*'
         if request.method == 'POST':
             option = request.form['searchTermChoice']

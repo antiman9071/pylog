@@ -3,8 +3,10 @@ from tkinter import ttk
 from tkinter import simpledialog 
 import sqlite3 
 from terminalLog import addEntry, removeEntry, modifyEntry, modifyEntireEntry, pad, search
+import sys
+file = sys.argv[1]
 def init_db(): 
-    with sqlite3.connect("log.db") as conn: 
+    with sqlite3.connect(file) as conn: 
         c = conn.cursor() 
         c.execute("CREATE TABLE IF NOT EXISTS challenges (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, method TEXT, challenge TEXT)") 
         conn.commit() 
@@ -20,7 +22,7 @@ def guiPrintLine(textBox, output):
 def showDB(filter, textBox):
     header = ("id", "username", "password", "method", "challenge")
     text = [header]
-    with sqlite3.connect("log.db") as conn:
+    with sqlite3.connect(file) as conn:
         c = conn.cursor()
         if(filter == "*"):
             c.execute("SELECT * FROM challenges")
@@ -46,7 +48,7 @@ def addButton():
     challenge = simpledialog.askstring(title="Enter a challenge", prompt="Enter a challenge")
     if bool(username) and bool(password) and bool(method) and bool(challenge):
         addEntry(username, password, method, challenge)
-        with sqlite3.connect("log.db") as conn:
+        with sqlite3.connect(file) as conn:
             c = conn.cursor()
             c.execute("SELECT * FROM challenges ORDER BY id")
             challenges = c.fetchall()
