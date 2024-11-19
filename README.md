@@ -2,4 +2,4 @@ This is a program that is meant to help track capture the flag challenges and th
 the program can be run with a bash script using help shows options. By default it will run in the terminal, the -w option will launch a web app(needs sudo for some reason), and the -g option will launch a GUI app.
 
 to install you need python3, tkinter, flask, and sqlite3.
-once installed the program should just run using the launcher script or launching the scripts seperately
+once installed the program should just run using the launcher script (The scripts will run separately only if the file path is given as an argument)
