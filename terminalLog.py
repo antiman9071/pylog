@@ -26,10 +26,10 @@ def showDB(filter):
         else:
             c.execute(f'SELECT * FROM challenges WHERE challenge="{filter}"')
         header = ("id", "username", "password", "method", "challenge")
-        print(pad(header[0], 5, False) + "|" + pad(header[1], 20, False) + "|" + pad(header[2], 20, False) + "|" + pad(header[3], 20, False) + "|" + pad(header[4], 20, False))
+        print(pad(header[0], 5, False) + "|" + pad(header[1], 20, False) + "|" + pad(header[2], 50, False) + "|" + pad(header[3], 50, False) + "|" + pad(header[4], 20, False))
         challenges = c.fetchall()
         for challenge in challenges:
-            output = pad(challenge[0], 5, False) + "|" + pad(challenge[1], 20, False) + "|" + pad(challenge[2], 20, False) + "|" + pad(challenge[3], 20, False) + "|" + pad(challenge[4], 20, False)
+            output = pad(challenge[0], 5, False) + "|" + pad(challenge[1], 20, False) + "|" + pad(challenge[2], 50, False) + "|" + pad(challenge[3], 50, False) + "|" + pad(challenge[4], 20, False)
             print(output)
         conn.commit()
 
@@ -104,8 +104,8 @@ if __name__ == "__main__":
         print("3. remove last entry")
         print("4. remove all entries")
         print("5. modify an entry")
-        print("5. modify an entry")
         print("6. search for entry")
+        print("7. exit")
         print("")
         choice = int(input("What do you want to do: "))
         if(choice == 1):
@@ -116,7 +116,16 @@ if __name__ == "__main__":
             username = (input("What is your username: "))
             password = (input("What is your password: "))
             method = (input("What is your method: "))
+            print("press enter to use the same challenge")
+            try:
+                challengeLast = challenge
+            except NameError:
+                challengeLast = ""
             challenge = (input("What is your challenge: "))
+            if not bool(challenge):
+                challenge = challengeLast
+            else:
+                challenge = challenge
             addEntry(username, password, method, challenge)
         elif(choice == 3):
             showDBBool = True
@@ -150,6 +159,8 @@ if __name__ == "__main__":
                 search(False, searchTermInput, True)
             else:
                 print("Sorry that input is not supported please run again")
+        elif(choice == 7):
+            break
         else:
             continueLoop = True
             break
