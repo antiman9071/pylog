@@ -117,13 +117,21 @@ def searchChallenges():
     with sqlite3.connect(file) as conn:
         searchTerm = '*'
         if request.method == 'POST':
-            option = request.form['searchTermChoice']
-            searchTerm = request.form['searchTerm']
+            try:
+                option = request.form['searchTermChoice']
+                searchTerm = request.form['searchTerm']
+            except:
+                searchTerm = '*'
+                option = "ID" 
+                pass
         c = conn.cursor()
         if option == "ID":
             c.execute(f'SELECT * FROM challenges WHERE id="{searchTerm}"')
         elif option == "Username":
-            c.execute(f'SELECT * FROM challenges WHERE username="{searchTerm}"')
+            c.execute(f'SELECT * FROM challenges WHERE username LIKE "{searchTerm}"')
+        else:
+            c.execute(f'SELECT * FROM challenges')
+            challenges = c.fetchall()
         challenges = c.fetchall()
     return render_template('index.html', filteredChallenges=challenges)
 
